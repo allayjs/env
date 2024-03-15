@@ -1,0 +1,68 @@
+{
+  "name": "@allayjs/env",
+  "description": "Environment variables manager for AllayJS",
+  "type": "module",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "meluiz",
+    "email": "me@meluiz.com",
+    "url": "https://meluiz.com"
+  },
+  "source": "./src/index.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "module": "./dist/index.js",
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "homepage": "https://github.com/allayjs/env",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/allayjs/env.git"
+  },
+  "bugs": {
+    "url": "https://github.com/allayjs/env/issues"
+  },
+  "scripts": {
+    "clean": "del-cli dist",
+    "build": "bun run precheck && bun run ./bunrc.ts",
+    "test": "bun run test",
+    "lint": "eslint . --ext=.ts --fix",
+    "format": "prettier '**/*.ts' --write",
+    "typecheck": "tsc --noEmit",
+    "prerealease": "bun run build",
+    "release": "changeset",
+    "version": "changeset version",
+    "publish": "bun run build && changeset publish",
+    "pretest": "bun run lint",
+    "precheck": "bun run pretest && bun run typecheck",
+    "preinstall": "bunx only-allow bun",
+    "prepublishOnly": "bun run build",
+    "postpublish": "bun run clean"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.27.1",
+    "@ianvs/prettier-plugin-sort-imports": "^4.2.0",
+    "@types/bun": "latest",
+    "@typescript-eslint/eslint-plugin": "^7.2.0",
+    "@typescript-eslint/parser": "^7.2.0",
+    "bun-plugin-dts": "^0.2.1",
+    "del-cli": "^5.1.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "eslint-plugin-unicorn": "^51.0.1",
+    "fast-glob": "^3.3.2",
+    "only-allow": "^1.2.1",
+    "prettier": "^3.2.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
