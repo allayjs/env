@@ -8,11 +8,21 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
+  "extends": [
+    "plugin:prettier/recommended"
+  ],
   "plugins": [
     "@typescript-eslint",
-    "unicorn"
+    "unicorn",
+    "prettier"
   ],
   "rules": {
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ],
     "no-caller": [
       "error"
     ],
@@ -93,6 +103,9 @@
     ],
     "no-mixed-spaces-and-tabs": [
       "error"
+    ],
+    "space-before-function-paren": [
+      "off"
     ],
     "no-cond-assign": [
       "error",
@@ -197,6 +210,7 @@
     "unicorn/prefer-number-properties": "error",
     "@typescript-eslint/naming-convention": "off",
     "@typescript-eslint/no-shadow": "error",
+    "@typescript-eslint/space-before-function-paren": "off",
     "@typescript-eslint/semi": [
       2,
       "never"
@@ -205,9 +219,5 @@
       "error",
       "single"
     ],
-    "@typescript-eslint/space-before-function-paren": [
-      "error",
-      "always"
-    ]
   }
 }
