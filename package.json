@@ -40,7 +40,7 @@
     "release": "changeset",
     "version": "changeset version",
     "publish": "bun run build && changeset publish",
-    "pretest": "bun run lint",
+    "pretest": "bun run lint & bun run format",
     "precheck": "bun run pretest && bun run typecheck",
     "preinstall": "bunx only-allow bun",
     "prepublishOnly": "bun run build",
@@ -64,5 +64,9 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@allayjs/exception": "^0.2.0",
+    "valibot": "^0.30.0"
   }
 }
