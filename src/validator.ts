@@ -1,7 +1,7 @@
 import type Exception from '@allayjs/exception'
 import type { BaseSchema, Input, ObjectSchema } from 'valibot'
 import type { Obj } from './types'
-import { object, parse, safeParse, ValiError } from 'valibot'
+import { object, parse, ValiError } from 'valibot'
 
 import { E_INVALID_ENVIRONMENT_VARIABLES } from './exceptions'
 

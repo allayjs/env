@@ -13,9 +13,10 @@ export default class Env<Values extends Obj> {
   }
 
   public static async create<Schema extends Obj<BaseSchema<any>>>(
+    appRoot: URL,
     schema: Schema,
   ): Promise<Env<{ [key in keyof Schema]: Input<(typeof schema)[key]> }>> {
-    const values = await new Processor().proccess()
+    const values = await new Processor(appRoot).proccess()
     const validator = this.rules(schema)
 
     return new Env(

@@ -1,17 +1,15 @@
-import type { Input } from 'valibot'
-import Exception from '@allayjs/exception'
-import { parseAsync, record, string, unknown, ValiError } from 'valibot'
+import dotenv from 'dotenv'
 
-import { E_INVALID_ENVIRONMENT_VARIABLES } from './exceptions'
+import Loader from './loader'
 
 export default class Processor {
-  private error: Exception
+  private appRoot: URL
 
-  constructor() {
-    this.error = new E_INVALID_ENVIRONMENT_VARIABLES()
+  constructor(appRoot: URL) {
+    this.appRoot = appRoot
   }
 
-  private async transformValue(value: string) {
+  private transformValue(value: string) {
     if (!Number.isNaN(Number(value))) {
       return Number(value)
     }
@@ -24,40 +22,41 @@ export default class Processor {
     return value
   }
 
-  private async loadAndProcessEnvironment() {
-    const schema = record(string(), unknown())
-    const variables = Bun.env ?? process.env
+  private async processContents(contents: string, values: Record<string, any>) {
+    if (!contents.trim()) {
+      return values
+    }
 
-    try {
-      const values = await parseAsync(schema, variables)
-      const processedValues = Object.entries(values).reduce(
-        async (promise, [key, value]) => {
-          const acc = await promise
+    const collection = dotenv.parse(contents.trim()) as Record<string, any>
 
-          if (typeof value === 'string') {
-            acc[key] = await this.transformValue(value)
-            return acc
-          }
+    for (const key of Object.keys(collection)) {
+      let value = process.env[key]
 
-          acc[key] = value
-          return acc
-        },
-        Promise.resolve({}) as Promise<Input<typeof schema>>,
-      )
-
-      return processedValues
-    } catch (error) {
-      if (error instanceof ValiError) {
-        const help = error.issues.map((issue) => {
-          return `- ${issue.message}`
-        })
-
-        this.error.help = help.join('\n')
-        throw this.error
+      if (!value) {
+        value = values[key]
+        process.env[key] = values[key]
       }
 
-      throw error
+      if (!values[key]) {
+        values[key] = value
+      }
     }
+
+    for (const key in values) {
+      values[key] = this.transformValue(values[key])
+    }
+
+    return collection
+  }
+
+  private async loadAndProcessEnvironment() {
+    const loadEnv = new Loader(this.appRoot)
+    const variables = await loadEnv.load()
+
+    const values: Record<string, any> = {}
+    await Promise.all(variables.map(({ contents }) => this.processContents(contents, values)))
+
+    return values
   }
 
   public async proccess() {
